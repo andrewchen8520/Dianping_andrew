@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jiedesui.welcomestart.com.jiedesui.consts.CONSTS;
 import com.jiedesui.welcomestart.entity.City;
 import com.jiedesui.welcomestart.entity.ResponseObject;
@@ -20,6 +22,13 @@ import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.lidroid.xutils.view.annotation.event.OnItemClick;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,25 +40,6 @@ import java.util.List;
 public class CityActivity extends AppCompatActivity {
 
     @ViewInject(R.id.city_list)
-    private ListView listDatas;
-    private List<City> cityList;
-
-    private Button button;
-
-    //yes you can do it
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.home_city_list);
-
-        View view= LayoutInflater.from(this).inflate(R.layout.home_city_search,null);
-
-    }
-
-
-
-
-/*    @ViewInject(R.id.city_list)
     private ListView listDatas;
     private List<City> cityList;
 
@@ -186,6 +176,6 @@ public class CityActivity extends AppCompatActivity {
         public TextView keySort;
         @ViewInject(R.id.city_list_item_name)
         public TextView cityName;
-    }*/
+    }
 
 }

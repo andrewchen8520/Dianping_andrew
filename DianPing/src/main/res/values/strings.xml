@@ -9,4 +9,8 @@
 
     <string name="city_search">正在定位中&#8230;</string>
     <string name="city_location">定位城市</string>
+
+    <string name="city_choose">选择城市</string>
+
+    <string name="city_name">所在城市</string>
 </resources>
