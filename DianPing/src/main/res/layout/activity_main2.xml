@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.jiedesui.welcomestart.Main2Activity">
+
+    <FrameLayout
+        android:id="@+id/main_content"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"></FrameLayout>
+    <RadioGroup
+        android:id="@+id/main_bottom_tabs"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!--android:button="@null"时去除按钮圆圈-->
+        <!--drawableTop设置为图片位置-->
+        <!--textColor设置点击时为橘红色，未点击时为灰色-->
+        <!--scaleX控件显示倍数-->
+        <RadioButton
+            android:drawableTop="@drawable/main_index_home_selector"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:drawablePadding="@dimen/little_space"
+            android:gravity="center"
+            android:button="@null"
+            android:layout_weight="1"
+            android:id="@+id/main_home_btn"
+            android:text="首页"
+            android:textColor="@drawable/main_color_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <RadioButton
+            android:drawableTop="@drawable/main_index_tuan_selector"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:drawablePadding="@dimen/little_space"
+            android:gravity="center"
+            android:button="@null"
+            android:layout_weight="1"
+            android:id="@+id/main_tuan_btn"
+            android:text="团购"
+            android:textColor="@drawable/main_color_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <RadioButton
+            android:drawableTop="@drawable/main_index_search_selector"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:drawablePadding="@dimen/little_space"
+            android:gravity="center"
+            android:button="@null"
+            android:layout_weight="1"
+            android:id="@+id/main_search_btn"
+            android:text="搜索"
+            android:textColor="@drawable/main_color_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <RadioButton
+            android:drawableTop="@drawable/main_index_my_selector"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:drawablePadding="@dimen/little_space"
+            android:gravity="center"
+            android:button="@null"
+            android:layout_weight="1"
+            android:id="@+id/main_my_btn"
+            android:text="我的"
+            android:textColor="@drawable/main_color_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RadioGroup>
+</LinearLayout>

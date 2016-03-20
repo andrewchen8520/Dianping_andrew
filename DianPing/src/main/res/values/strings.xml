@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">WelcomeStart</string>
+
+    <string-array name="cityList">
+        <item >杭州</item>
+        <item >北京</item>
+        <item >上海</item>
+    </string-array>
+
+    <string name="city_search">正在定位中&#8230;</string>
+    <string name="city_location">定位城市</string>
+</resources>

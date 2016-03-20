@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--首页fragment布局-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/normal_orange_color">
+        <TextView
+            android:id="@+id/index_top_city"
+            android:text="选择城市"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:drawablePadding="@dimen/little_space"
+            android:textColor="@color/white"
+            android:padding="10dp"
+            android:drawableLeft="@drawable/home_ico_city2"/>
+        <TextView
+            android:text="首页"
+            android:padding="@dimen/normal_space"
+            android:textSize="@dimen/title_text_size"
+            android:textColor="@color/white"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+
+            android:padding="10dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/nav_icon_scan_nor2"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
