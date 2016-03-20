@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,8 +34,9 @@ public class CityActivity extends AppCompatActivity {
     private ListView listDatas;
     private List<City> cityList;
 
+    private Button button;
+
     //yes you can do it
-    //commit 2
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +45,8 @@ public class CityActivity extends AppCompatActivity {
         View view= LayoutInflater.from(this).inflate(R.layout.home_city_search,null);
 
     }
+
+
 
 
 /*    @ViewInject(R.id.city_list)
