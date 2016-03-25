@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context="com.jiedesui.welcomestart.Main2Activity">
 
+    <!--app的主要界面-->
     <FrameLayout
         android:id="@+id/main_content"
         android:layout_weight="1"

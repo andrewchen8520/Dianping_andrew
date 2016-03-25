@@ -13,7 +13,7 @@ import com.jiedesui.welcomestart.main.fragment.FragmentSearch;
 import com.jiedesui.welcomestart.main.fragment.FragmentTuan;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
-
+// app的主要界面只要功能的切换卡
 public class Main2Activity extends FragmentActivity implements RadioGroup.OnCheckedChangeListener {
 
     @ViewInject(R.id.main_bottom_tabs)
