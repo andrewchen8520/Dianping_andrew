@@ -49,12 +49,14 @@ public class CityActivity extends AppCompatActivity {
         setContentView(R.layout.home_city_list);
         ViewUtils.inject(this);
 
+        //为城市列表加入头部信息“正在定位”
         View view = LayoutInflater.from(this).inflate(R.layout.home_city_search,
                 null);
         listDatas.addHeaderView(view);
-        //执行异步任务
+        //执行异步任务进行网络访问
         new CityDataTask().execute();
     }
+
     @OnClick({R.id.index_city_back,R.id.index_city_flushcity})
     public void onClick(View view){
         switch (view.getId()) {
@@ -79,6 +81,7 @@ public class CityActivity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
         finish();
     }
+
     //使用异步任务获取城市的json串
     public class CityDataTask extends AsyncTask<Void, Void, List<City>> {
         @Override
