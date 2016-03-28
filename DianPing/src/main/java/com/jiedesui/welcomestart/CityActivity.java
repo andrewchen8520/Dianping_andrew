@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -53,23 +55,32 @@ public class CityActivity extends AppCompatActivity {
                 null);
         listDatas.addHeaderView(view);
         //执行异步任务进行网络访问
-        new CityDataTask().execute();
+
     }
 
-    @OnClick({R.id.index_city_back,R.id.index_city_flushcity})
+
+    //点击按钮实现功能“返回”“测试”
+    @OnClick({R.id.index_city_back,R.id.index_city_flushcity,R.id.btn_test,R.id.btn_test})
     public void onClick(View view){
         switch (view.getId()) {
             case R.id.index_city_back://返回
                 finish();
                 break;
             case R.id.index_city_flushcity://刷新
-                new CityDataTask().execute();
+                Toast.makeText(this,"fresh",Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.btn_test:
+                Toast.makeText(this,"TEST",Toast.LENGTH_SHORT).show();
+                new LoadCityListTask().execute();
                 break;
 
             default:
                 break;
         }
     }
+
+    //点击ListView的城市列表后
     @OnItemClick({R.id.city_list})
     public void onItemClick(AdapterView<?> parent, View view,
                             int position, long id) {
@@ -81,103 +92,61 @@ public class CityActivity extends AppCompatActivity {
         finish();
     }
 
+
     //使用异步任务获取城市的json串
-    public class CityDataTask extends AsyncTask<Void, Void, List<City>> {
+  /* public class CityDataTask extends AsyncTask<Void,Void,List<City>>{
+
         @Override
         protected List<City> doInBackground(Void... params) {
-            HttpClient client = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(CONSTS.City_Data_URI);
+            //建立网络连接，获取json串
+            HttpClient client=new DefaultHttpClient();
+            HttpPost httpPost=new HttpPost(CONSTS.City_Data_URI);
+
             try {
-                HttpResponse httpResponse = client.execute(httpPost);
-                if (httpResponse.getStatusLine().getStatusCode()==200) {
-                    String jsonString = EntityUtils.toString(httpResponse.getEntity());
-                    return parseCityDatasJson(jsonString);
+                HttpResponse httpResponse=client.execute(httpPost);
+                if (httpResponse.getStatusLine().getStatusCode()==200){
+                    String jsonString=EntityUtils.toString(httpResponse.getEntity());
+                    Log.d("TAG",jsonString);
+
                 }
-            } catch (ClientProtocolException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+
             return null;
         }
+    }*/
+
+    private class LoadCityListTask extends AsyncTask<Void,Void,List<City>>{
+
         @Override
-        protected void onPostExecute(List<City> result) {
-            super.onPostExecute(result);
-            cityList = result;
-            //适配显示
-            MyAdapter adapter = new MyAdapter(cityList);
-            listDatas.setAdapter(adapter);
+        protected List<City> doInBackground(Void... params) {
+            HttpClient client=new DefaultHttpClient();
+            HttpPost httpPost=new HttpPost(CONSTS.City_Data_URI);
+
+            try {
+                HttpResponse httpResponse=client.execute(httpPost);
+                if (httpResponse.getStatusLine().getStatusCode()==200){
+                    String jsonString=EntityUtils.toString(httpResponse.getEntity());
+                    Log.d("TAG",jsonString);
+                    return parseCityDatasJson(jsonString);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+
         }
     }
+
+
     //解析城市数据的json
-    public List<City> parseCityDatasJson(String json){
-        Gson gson = new Gson();
-        ResponseObject<List<City>> responseObject = gson.fromJson(json, new TypeToken<ResponseObject<List<City>>>(){}.getType());
-        return responseObject.getDatas();
+    private List<City> parseCityDatasJson(String jsonString) {
+
+        return null;
     }
-    private StringBuffer buffer = new StringBuffer();//用来第一次保存首字母的索引
-    private List<String> firdtList = new ArrayList<String>();//用来保存索引值对象的城市名称
+
     //适配器
-    public class MyAdapter extends BaseAdapter {
-        private List<City> listCityDatas;
-
-        public MyAdapter(List<City> listCityDatas) {
-            this.listCityDatas = listCityDatas;
-        }
-
-        @Override
-        public int getCount() {
-            return listCityDatas.size();//返回集合的长度
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return listCityDatas.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            Holder holder;
-            if (convertView==null) {
-                holder = new Holder();
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_city_list_item, null);
-                ViewUtils.inject(holder, convertView);
-                convertView.setTag(holder);
-            }else{
-                holder = (Holder) convertView.getTag();
-            }
-            //数据显示的处理
-            City city = listCityDatas.get(position);
-            String sort = city.getSortKey();
-            String name = city.getName();
-            //索引不存在
-            if (buffer.indexOf(sort)==-1) {
-                buffer.append(sort);
-                firdtList.add(name);
-            }
-            if (firdtList.contains(name)) {
-                holder.keySort.setText(sort);
-                holder.keySort.setVisibility(View.VISIBLE);//包含对应的城市就让索引显示
-            }else{
-                holder.keySort.setVisibility(View.GONE);
-            }
-            holder.cityName.setText(name);
-            return convertView;
-        }
-
-    }
-    public class Holder{
-        @ViewInject(R.id.city_list_item_sort)
-        public TextView keySort;
-        @ViewInject(R.id.city_list_item_name)
-        public TextView cityName;
-    }
 
 }
