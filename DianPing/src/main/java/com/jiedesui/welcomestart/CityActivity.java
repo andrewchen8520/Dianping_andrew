@@ -1,5 +1,6 @@
 package com.jiedesui.welcomestart;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,11 +26,11 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.lidroid.xutils.view.annotation.event.OnItemClick;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class CityActivity extends AppCompatActivity {
                 null);
         listDatas.addHeaderView(view);
         //执行异步任务进行网络访问
-
+        new LoadCityListTask().execute();
     }
 
 
@@ -68,6 +69,7 @@ public class CityActivity extends AppCompatActivity {
                 break;
             case R.id.index_city_flushcity://刷新
                 Toast.makeText(this,"fresh",Toast.LENGTH_SHORT).show();
+                new LoadCityListTask().execute();
                 break;
 
             case R.id.btn_test:
@@ -80,7 +82,7 @@ public class CityActivity extends AppCompatActivity {
         }
     }
 
-    //点击ListView的城市列表后
+    //点击ListView的城市列表后,返回选中城市名称
     @OnItemClick({R.id.city_list})
     public void onItemClick(AdapterView<?> parent, View view,
                             int position, long id) {
@@ -92,30 +94,6 @@ public class CityActivity extends AppCompatActivity {
         finish();
     }
 
-
-    //使用异步任务获取城市的json串
-  /* public class CityDataTask extends AsyncTask<Void,Void,List<City>>{
-
-        @Override
-        protected List<City> doInBackground(Void... params) {
-            //建立网络连接，获取json串
-            HttpClient client=new DefaultHttpClient();
-            HttpPost httpPost=new HttpPost(CONSTS.City_Data_URI);
-
-            try {
-                HttpResponse httpResponse=client.execute(httpPost);
-                if (httpResponse.getStatusLine().getStatusCode()==200){
-                    String jsonString=EntityUtils.toString(httpResponse.getEntity());
-                    Log.d("TAG",jsonString);
-
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-    }*/
 
     private class LoadCityListTask extends AsyncTask<Void,Void,List<City>>{
 
@@ -134,19 +112,99 @@ public class CityActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             return null;
+        }
 
+        //获取到城市类表信息后更新UI
+        @Override
+        protected void onPostExecute(List<City> cities) {
+            super.onPostExecute(cities);
+            cityList=cities;
+            //进行显示
+            Log.d("TAG",cities.toString());
+            MyAdapter myAdapter=new MyAdapter(getBaseContext(),R.layout.home_city_list_item,cities);
+            listDatas.setAdapter(myAdapter);
         }
     }
 
 
+
     //解析城市数据的json
     private List<City> parseCityDatasJson(String jsonString) {
-
-        return null;
+        Gson gson =new Gson();
+        /**
+         *参数1：String类型的json数据
+         *参数2：需要转换成的目标类
+         */
+        ResponseObject<List<City>> responseObject=gson.fromJson(jsonString, new TypeToken<ResponseObject<List<City>>>() {
+        }.getType());
+        Log.d("TAG",new TypeToken<ResponseObject<List<City>>>() {
+        }.getType()+"");
+        return responseObject.getDatas();
     }
 
-    //适配器
+    //适配器,listView显示列表用
+    private StringBuffer buffer=new StringBuffer();//用来保存依次出现的首字母
+    private List<String> firstList=new ArrayList<>();//用来保存索引字母下面对应城市名称的列表
+    public class MyAdapter extends ArrayAdapter{
+        private List<City> listCityDatas;
+        public MyAdapter(Context context, int resource, List<City> citylist) {
+            super(context, resource, citylist);
+            listCityDatas=citylist;
+        }
+
+        //重写View方法
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view;
+
+            Holder holder;
+           if (convertView==null){
+               view=LayoutInflater.from(parent.getContext()).inflate(R.layout.home_city_list_item,null);
+
+               //使用Holder缓存两个TextView对象，是的findViewById方法不用频繁调用
+               holder=new Holder();
+               holder.keysort=(TextView)view.findViewById(R.id.city_list_item_sort);
+               holder.cityName=(TextView)view.findViewById(R.id.city_list_item_name);
+
+               //使用view的setTag方法保存holder信息
+               view.setTag(holder);
+
+           }else {
+              view= convertView;
+               holder=(Holder)view.getTag();
+           }
+
+            //进行数据处理
+            City city=listCityDatas.get(position);
+            String sortCode=city.getSortKey();
+            String cityName=city.getName();
+
+            //进行
+            if (buffer.indexOf(sortCode)==-1){
+                buffer.append(sortCode);
+                firstList.add(cityName);
+
+            }
+
+            if (firstList.contains(cityName)){
+                holder.keysort.setText(sortCode);
+                holder.keysort.setVisibility(View.VISIBLE);
+            } else {
+                holder.keysort.setVisibility(View.GONE);
+            }
+
+            holder.keysort.setText(sortCode);
+            holder.cityName.setText(cityName);
+
+            return view;
+        }
+    }
+
+    //View实例的缓存区
+    class Holder{
+        TextView keysort;
+        TextView cityName;
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.jiedesui.welcomestart.main.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -86,7 +87,7 @@ public class FragmentHome extends android.support.v4.app.Fragment implements Loc
          */
         try {
             Log.d("TAG","startLocation");
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,this);}
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,60,100,this);}
         catch (SecurityException e) {
             e.printStackTrace();}
 
@@ -114,10 +115,15 @@ public class FragmentHome extends android.support.v4.app.Fragment implements Loc
         startActivityForResult(new Intent(getActivity(),CityActivity.class), MyUtils.RequestCityCode);
     }
 
-    //处理选择城市后的返回信息
+    //处理选择城市后的返回信息,显示城市
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==MyUtils.RequestCityCode && resultCode== Activity.RESULT_OK){
+            cityName=data.getStringExtra("cityName");
+            Log.d("TAG",cityName);
+            topCity.setText(cityName);
+        }
     }
 
     //位置变更执行的方法
